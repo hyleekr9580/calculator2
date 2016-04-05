@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.View;
 import android.widget.EditText;
 
 public class MainActivity extends AppCompatActivity {
@@ -24,6 +25,27 @@ public class MainActivity extends AppCompatActivity {
         mEditTotal.addTextChangedListener(watcher1);
         mEditMoney.addTextChangedListener(watcher2);
 
+        mEditTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mEditMoney.removeTextChangedListener(watcher2);
+                } else {
+                    mEditMoney.addTextChangedListener(watcher2);
+                }
+            }
+        });
+
+        mEditMoney.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+                if (hasFocus) {
+                    mEditTotal.removeTextChangedListener(watcher1);
+                } else {
+                    mEditTotal.addTextChangedListener(watcher1);
+                }
+            }
+        });
     }
 
     //  합계를 입력 하였을때 공급가, 부가세 자동변경
