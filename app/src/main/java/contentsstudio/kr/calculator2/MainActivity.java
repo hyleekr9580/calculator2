@@ -11,6 +11,7 @@ public class MainActivity extends AppCompatActivity {
     private EditText mEditMoney;
     private EditText mEditVat;
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
