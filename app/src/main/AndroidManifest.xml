@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="contentsstudio.kr.calculator2">
+
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
@@ -12,6 +13,7 @@
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -21,8 +23,7 @@
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Dialog"
             android:windowSoftInputMode="stateHidden" />
-
-
+        <activity android:name=".EmailActivity"></activity>
     </application>
 
 </manifest>

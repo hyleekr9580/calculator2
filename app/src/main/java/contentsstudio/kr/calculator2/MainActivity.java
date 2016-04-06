@@ -2,12 +2,16 @@ package contentsstudio.kr.calculator2;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -23,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private int mCount = 10;
     public static Activity activity;
+    private WebView mWebView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -88,15 +93,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-    }
-
-
-    public boolean onKeyDown(int keycode, KeyEvent event) {
-        if (keycode == KeyEvent.KEYCODE_BACK) {
-            Intent intent = new Intent(this, Pop_Ad_Viewer.class);
-            startActivity(intent);
-        }
-        return super.onKeyDown(keycode, event);
     }
 
 
@@ -226,6 +222,65 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(this, Pop_Ad_Viewer.class);
+            startActivity(intent);
+        }
+        return super.onKeyDown(keycode, event);
+    }
+
+
+    // 옵션메뉴
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        super.onCreateOptionsMenu(menu);
+        menu.add(0, 1, 0, "별점구걸(동해)");
+        menu.add(0, 2, 0, "관리자문의 URL(학원)");
+        menu.add(0, 3, 0, "이메일");
+        return true;
+    }
+
+    //옵션메뉴설정
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case 1:
+                star();
+                break;
+            case 2:
+                admin();
+                break;
+
+            case 3:
+                email();
+                break;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    private void email() {
+        Toast.makeText(MainActivity.this, "이메일", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, EmailActivity.class);
+        startActivity(intent);
+    }
+
+    private void star() {
+        Toast.makeText(MainActivity.this, "별점", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=com.hyunseo.donghae.maplestoryexpmanager"));
+        startActivity(intent);
+    }
+
+    private void admin() {
+        Toast.makeText(MainActivity.this, "관리자", Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.suwonsmartapp.com/qna"));
+        startActivity(intent);
+
+    }
+
 
 }
+
+
 
