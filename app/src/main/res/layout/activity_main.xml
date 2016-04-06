@@ -21,6 +21,7 @@
             android:textSize="20dp" />
 
         <EditText
+
             android:id="@+id/total_edt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -42,7 +43,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="공급가 : "
+            android:text="공급가액 : "
             android:textSize="20dp" />
 
         <EditText
@@ -71,6 +72,7 @@
             android:textSize="20dp" />
 
         <EditText
+
             android:id="@+id/vat_edt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -83,6 +85,43 @@
 
     </LinearLayout>
 
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_margin="10dp"-->
+        <!--android:orientation="horizontal">-->
+
+        <!--<TextView-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="세율 : "-->
+            <!--android:textSize="20dp" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/minus_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="-" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/vat2_text"-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_weight="1"-->
+            <!--android:inputType="number"-->
+            <!--android:singleLine="true"-->
+            <!--android:text="10"-->
+            <!--android:gravity="center"-->
+            <!--android:textSize="20dp" />-->
+
+        <!--<Button-->
+            <!--android:id="@+id/plus_btn"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="+" />-->
+
+    <!--</LinearLayout>-->
+
 
     <Button
         android:id="@+id/clean_btn"
@@ -90,4 +129,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="10dp"
         android:text="CLEAN" />
+
+
 </LinearLayout>

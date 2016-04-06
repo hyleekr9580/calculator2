@@ -1,9 +1,12 @@
 package contentsstudio.kr.calculator2;
 
+import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -18,10 +21,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String reault = "";
 
+    private int mCount = 10;
+    public static Activity activity;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //어플종료
+        activity = MainActivity.this;
+
 
         mEditTotal = (EditText) findViewById(R.id.total_edt);
         mEditMoney = (EditText) findViewById(R.id.money_edt);
@@ -29,6 +39,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mButtonClean = (Button) findViewById(R.id.clean_btn);
         mButtonClean.setOnClickListener(this);
+
 
         mEditTotal.addTextChangedListener(watcher1);
         mEditMoney.addTextChangedListener(watcher2);
@@ -80,6 +91,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
 
+    public boolean onKeyDown(int keycode, KeyEvent event) {
+        if (keycode == KeyEvent.KEYCODE_BACK) {
+            Intent intent = new Intent(this, Pop_Ad_Viewer.class);
+            startActivity(intent);
+        }
+        return super.onKeyDown(keycode, event);
+    }
+
+
     //  합계를 입력 하였을때 공급가, 부가세 자동변경
     TextWatcher watcher1 = new TextWatcher() {
         @Override
@@ -107,9 +127,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 vat = num - res;
 
                 //  공급가 보여주기
-                mEditMoney.setText(String.format("%,6.1f", res));
+                mEditMoney.setText(String.format("%f", res));
                 //  부가세 보여주기
-                mEditVat.setText(String.format("%,6.1f", vat));
+                mEditVat.setText(String.format("%f", vat));
             }
         }
 
@@ -144,9 +164,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //  합계 보여주기
-                mEditTotal.setText(String.format("%,6.1f", res));
+                mEditTotal.setText(String.format("%f", res));
                 //  부가세 보여주기
-                mEditVat.setText(String.format("%,6.1f", vat));
+                mEditVat.setText(String.format("%f", vat));
             }
         }
 
@@ -174,15 +194,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 num = Float.parseFloat(mEditVat.getText().toString());
 
                 //  공급가 계산
-                res = num * 10;
+                res = num * mCount;
                 //  합계 계산
                 total = num + res;
 
 
                 //  공급가 보여주기
-                mEditMoney.setText(String.format("%,6.1f", res));
+                mEditMoney.setText(String.format("%f", res));
                 //  합계 보여주기
-                mEditTotal.setText(String.format("%,6.1f", total));
+                mEditTotal.setText(String.format("%f", total));
             }
         }
 
@@ -195,11 +215,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //  클릭 이벤트
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
 
-        Toast.makeText(MainActivity.this, "모든 항목이 삭제 되었습니다.", Toast.LENGTH_SHORT).show();
-        mEditTotal.setText("");
-        mEditMoney.setText("");
-        mEditVat.setText("");
+            case R.id.clean_btn:
+                Toast.makeText(MainActivity.this, "모든 항목이 삭제 되었습니다.", Toast.LENGTH_SHORT).show();
+                mEditTotal.setText("");
+                mEditMoney.setText("");
+                mEditVat.setText("");
+                break;
+        }
     }
+
+
 }
 
