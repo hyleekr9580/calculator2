@@ -21,7 +21,6 @@
             android:textSize="20dp" />
 
         <EditText
-
             android:id="@+id/total_edt"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -29,6 +28,7 @@
             android:hint="금액을 입력하세요."
             android:inputType="number"
             android:singleLine="true"
+            android:gravity="right"
             android:textSize="20dp" />
 
 
@@ -54,6 +54,8 @@
             android:hint="공급가를 입력하세요."
             android:inputType="number"
             android:singleLine="true"
+            android:gravity="right"
+
             android:textSize="20dp" />
 
 
@@ -80,6 +82,8 @@
             android:hint="부가세를 입력하세요."
             android:inputType="number"
             android:singleLine="true"
+            android:gravity="right"
+
             android:textSize="20dp" />
 
 

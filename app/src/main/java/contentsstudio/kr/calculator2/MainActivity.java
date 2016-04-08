@@ -7,14 +7,16 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.webkit.WebView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import java.text.DecimalFormat;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
     private EditText mEditTotal;
@@ -25,9 +27,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private String reault = "";
 
-    private int mCount = 10;
     public static Activity activity;
-    private WebView mWebView;
+    private DecimalFormat mDecimalFormat;
+
+    private static final String TAG = MainActivity.class.getSimpleName();
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,6 +54,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mEditMoney.addTextChangedListener(watcher2);
         mEditVat.addTextChangedListener(watcher3);
 
+        mDecimalFormat = new DecimalFormat("#,###,###");
+
         mEditTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -59,6 +65,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     mEditMoney.addTextChangedListener(watcher2);
                     mEditVat.addTextChangedListener(watcher3);
+
+
                 }
             }
         });
@@ -101,13 +109,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             // 입력하기 전에
-
+            Log.e(TAG, "==================================> beforeTextChanged");
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            // 입력되는 텍스트에 변화가 있을 때
 
+            Log.e(TAG, "==================================> onTextChanged");
+
+           // 입력되는 텍스트에 변화가 있을 때
             float num, res, vat;
 
             if (s.toString().equals(reault)) {
@@ -123,15 +133,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 vat = num - res;
 
                 //  공급가 보여주기
-                mEditMoney.setText(String.format("%f", res));
+                mEditMoney.setText("" + mDecimalFormat.format(res));
                 //  부가세 보여주기
-                mEditVat.setText(String.format("%f", vat));
+                mEditVat.setText("" + mDecimalFormat.format(vat));
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             // 입력이 끝났을 때
+
+            Log.e(TAG, "==================================> afterTextChanged");
 
         }
     };
@@ -160,9 +172,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                 //  합계 보여주기
-                mEditTotal.setText(String.format("%f", res));
+                mEditTotal.setText("" + mDecimalFormat.format(res));
                 //  부가세 보여주기
-                mEditVat.setText(String.format("%f", vat));
+                mEditVat.setText("" + mDecimalFormat.format(vat));
             }
         }
 
@@ -187,18 +199,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mEditMoney.setText("");
                 mEditTotal.setText("");
             } else {
+
                 num = Float.parseFloat(mEditVat.getText().toString());
 
                 //  공급가 계산
-                res = num * mCount;
+                res = num * 10;
                 //  합계 계산
                 total = num + res;
 
-
                 //  공급가 보여주기
-                mEditMoney.setText(String.format("%f", res));
+                mEditMoney.setText("" + mDecimalFormat.format(res));
                 //  합계 보여주기
-                mEditTotal.setText(String.format("%f", total));
+                mEditTotal.setText("" + mDecimalFormat.format(total));
             }
         }
 
