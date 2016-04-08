@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mEditVat.setText("");
             } else {
 
-                num = Float.parseFloat(mEditTotal.getText().toString());
+                num = Float.parseFloat(mEditTotal.getText().toString().replace(",", ""));
 
                 //  공급가 계산
                 res = num / 1.1F;
@@ -163,7 +163,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mEditTotal.setText("");
                 mEditVat.setText("");
             } else {
-                num = Float.parseFloat(mEditMoney.getText().toString());
+                num = Float.parseFloat(mEditMoney.getText().toString().replace(",", ""));
 
                 //  부가세 계산
                 vat = num * 0.1F;
@@ -181,7 +181,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
 
@@ -200,7 +199,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mEditTotal.setText("");
             } else {
 
-                num = Float.parseFloat(mEditVat.getText().toString());
+                num = Float.parseFloat(mEditVat.getText().toString().replace(",", ""));
 
                 //  공급가 계산
                 res = num * 10;
