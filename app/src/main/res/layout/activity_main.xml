@@ -7,6 +7,11 @@
     android:orientation="vertical"
     tools:context="contentsstudio.kr.calculator2.MainActivity">
 
+    <TextView
+        android:layout_gravity="center"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="합계기준 : 9,999,999,999 까지 입력이 가능합니다."/>
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

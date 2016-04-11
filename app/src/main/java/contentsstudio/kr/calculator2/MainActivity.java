@@ -8,7 +8,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -23,16 +22,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private EditText mEditTotal;
     private EditText mEditMoney;
     private EditText mEditVat;
-
     private Button mButtonClean;
 
-    private String reault = "";
+    private String mReault = "";
+    private String mReault2 = "0";
 
-    public static Activity activity;
     private DecimalFormat mDecimalFormat;
-
     private static final String TAG = MainActivity.class.getSimpleName();
 
+    public static Activity activity;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +40,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         //어플종료
         activity = MainActivity.this;
 
-
         mEditTotal = (EditText) findViewById(R.id.total_edt);
         mEditMoney = (EditText) findViewById(R.id.money_edt);
         mEditVat = (EditText) findViewById(R.id.vat_edt);
@@ -50,12 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         mButtonClean = (Button) findViewById(R.id.clean_btn);
         mButtonClean.setOnClickListener(this);
 
-
         mEditTotal.addTextChangedListener(watcher1);
         mEditMoney.addTextChangedListener(watcher2);
         mEditVat.addTextChangedListener(watcher3);
 
-        mDecimalFormat = new DecimalFormat("###,###,###,###");
+        mDecimalFormat = new DecimalFormat("###,###");
 
         mEditTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -66,8 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     mEditMoney.addTextChangedListener(watcher2);
                     mEditVat.addTextChangedListener(watcher3);
-
-
                 }
             }
         });
@@ -82,7 +76,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     mEditTotal.addTextChangedListener(watcher1);
                     mEditVat.addTextChangedListener(watcher3);
-
                 }
             }
         });
@@ -94,73 +87,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if (hasFocus) {
                     mEditTotal.removeTextChangedListener(watcher1);
                     mEditMoney.removeTextChangedListener(watcher2);
-
                 } else {
                     mEditTotal.addTextChangedListener(watcher1);
                     mEditMoney.addTextChangedListener(watcher2);
-
                 }
             }
         });
     }
-
 
     //  합계를 입력 하였을때 공급가, 부가세 자동변경
     TextWatcher watcher1 = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
             // 입력하기 전에
-//            Log.e(TAG, "==================================> beforeTextChanged");
         }
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-
             // 입력되는 텍스트에 변화가 있을 때
-            int num, res, vat;
+            double num, res, vat;
 
-            if (!s.toString().equals(reault)) {
-
-                reault = makeStringComma(s.toString().replaceAll(",", ""));
-                mEditTotal.setText(reault);
+            if (!s.toString().equals(mReault)) {
+                mReault = makeStringComma(s.toString().replaceAll(",", ""));
+                mEditTotal.setText(mReault);
                 Editable e = mEditTotal.getText();
-                Selection.setSelection(e, reault.length());
+                Selection.setSelection(e, mReault.length());
 
-                num = Integer.parseInt(mEditTotal.getText().toString().replace(",", ""));
-                Log.e(TAG, "==================================> num : " + num);
+                if (mEditTotal.getText().length() > 13 || mEditTotal.getText().length() < 1) {
+                    mEditTotal.setText(mReault2);
+                } else {
+                    num = Double.parseDouble(mEditTotal.getText().toString().replace(",", ""));
 
-                //  공급가 계산
-                res = (int) (num / 1.1000F);
-                Log.e(TAG, "======================================> res : " + res);
+                    //  공급가 계산
+                    res = num / 1.10d;
+                    //  부가세 계산
+                    vat = num - res;
 
-                //  부가세 계산
-                vat = num - res;
-                Log.e(TAG, "============================================> vat : " + vat);
-
-                //  공급가 보여주기
-                mEditMoney.setText("" + mDecimalFormat.format(res));
-                //  부가세 보여주기
-                mEditVat.setText("" + mDecimalFormat.format(vat));
+                    //  공급가 보여주기
+                    mEditMoney.setText("" + mDecimalFormat.format(res));
+                    //  부가세 보여주기
+                    mEditVat.setText("" + mDecimalFormat.format(vat));
+                }
             } else {
-                mEditMoney.setText("");
-                mEditVat.setText("");
-
+                mEditMoney.setText(mReault2);
+                mEditVat.setText(mReault2);
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
             // 입력이 끝났을 때
-
-//            Log.e(TAG, "==================================> afterTextChanged");
-
         }
     };
 
 
     //  공급가를 입력 하였을때 합계, 부가세 자동변경
-
     TextWatcher watcher2 = new TextWatcher() {
         @Override
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -168,32 +149,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            int num, res, vat;
-            if (!s.toString().equals(reault)) {
+            double num, res, vat;
+            if (!s.toString().equals(mReault)) {
 
-                reault = makeStringComma(s.toString().replaceAll(",", ""));
-                mEditMoney.setText(reault);
+                mReault = makeStringComma(s.toString().replaceAll(",", ""));
+                mEditMoney.setText(mReault);
                 Editable e = mEditMoney.getText();
-                Selection.setSelection(e, reault.length());
+                Selection.setSelection(e, mReault.length());
 
-                num = Integer.parseInt(mEditMoney.getText().toString().replace(",", ""));
+                if (mEditMoney.getText().length() > 13 || mEditMoney.getText().length() < 1) {
+                    mEditMoney.setText(mReault2);
+                } else {
+                    num = Double.parseDouble(mEditMoney.getText().toString().replace(",", ""));
 
-                //  부가세 계산
-                vat = (int) (num * 0.10F);
-                //  합계 계산
-                res = num + vat;
+                    //  부가세 계산
+                    vat = num * 0.10d;
+                    //  합계 계산
+                    res = num + vat;
 
-
-                //  합계 보여주기
-                mEditTotal.setText("" + mDecimalFormat.format(res));
-                //  부가세 보여주기
-                mEditVat.setText("" + mDecimalFormat.format(vat));
+                    //  합계 보여주기
+                    mEditTotal.setText("" + mDecimalFormat.format(res));
+                    //  부가세 보여주기
+                    mEditVat.setText("" + mDecimalFormat.format(vat));
+                }
             } else {
-                mEditTotal.setText("");
-                mEditVat.setText("");
+                mEditTotal.setText(mReault2);
+                mEditVat.setText(mReault2);
             }
         }
-
 
         @Override
         public void afterTextChanged(Editable s) {
@@ -209,35 +192,38 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            int num, res, total;
-            if (!s.toString().equals(reault)) {
+            double num, res, total;
+            if (!s.toString().equals(mReault)) {
 
-                reault = makeStringComma(s.toString().replaceAll(",", ""));
-                mEditVat.setText(reault);
+                mReault = makeStringComma(s.toString().replaceAll(",", ""));
+                mEditVat.setText(mReault);
                 Editable e = mEditVat.getText();
-                Selection.setSelection(e, reault.length());
+                Selection.setSelection(e, mReault.length());
 
-                num = Integer.parseInt(mEditVat.getText().toString().replace(",", ""));
+                if (mEditVat.getText().length() > 11 || mEditVat.getText().length() < 1) {
+                    mEditVat.setText(mReault2);
+                } else {
+                    num = Double.parseDouble(mEditVat.getText().toString().replace(",", ""));
 
-                //  공급가 계산
-                res = (int) (num * 10.0);
-                //  합계 계산
-                total = num + res;
+                    //  공급가 계산
+                    res = num * 10.0d;
+                    //  합계 계산
+                    total = num + res;
 
-                //  공급가 보여주기
-                mEditMoney.setText("" + mDecimalFormat.format(res));
-                //  합계 보여주기
-                mEditTotal.setText("" + mDecimalFormat.format(total));
+                    //  공급가 보여주기
+                    mEditMoney.setText("" + mDecimalFormat.format(res));
+                    //  합계 보여주기
+                    mEditTotal.setText("" + mDecimalFormat.format(total));
+                }
             } else {
-                mEditMoney.setText("");
-                mEditTotal.setText("");
+                mEditMoney.setText(mReault2);
+                mEditTotal.setText(mReault2);
 
             }
         }
 
         @Override
         public void afterTextChanged(Editable s) {
-
         }
     };
 
@@ -248,9 +234,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.clean_btn:
                 Toast.makeText(MainActivity.this, "모든 항목이 삭제 되었습니다.", Toast.LENGTH_SHORT).show();
-                mEditTotal.setText("" + 0);
-                mEditMoney.setText("" + 0);
-                mEditVat.setText("" + 0);
+                mEditTotal.setText(mReault2);
+                mEditMoney.setText(mReault2);
+                mEditVat.setText(mReault2);
                 break;
         }
     }
@@ -284,7 +270,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case 2:
                 admin();
                 break;
-
             case 3:
                 email();
                 break;
