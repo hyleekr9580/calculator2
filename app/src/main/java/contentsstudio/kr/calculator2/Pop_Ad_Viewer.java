@@ -53,8 +53,8 @@ public class Pop_Ad_Viewer extends Activity {
                 //Pop_Ad_Viewer.this.finish();
                 //close();
                 Pop_Ad_Viewer.finish();
-                moveTaskToBack(true);
-                android.os.Process.killProcess(android.os.Process.myPid());
+                finish();
+//                android.os.Process.killProcess(android.os.Process.myPid());
             }
         });
 

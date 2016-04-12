@@ -4,14 +4,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.Selection;
 import android.text.TextWatcher;
 import android.view.KeyEvent;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,7 +42,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         //어플종료
-        activity = MainActivity.this;
+//        activity = MainActivity.this;
 
         mEditTotal = (EditText) findViewById(R.id.total_edt);
         mEditMoney = (EditText) findViewById(R.id.money_edt);
@@ -243,8 +247,40 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     public boolean onKeyDown(int keycode, KeyEvent event) {
         if (keycode == KeyEvent.KEYCODE_BACK) {
-            Intent intent = new Intent(this, Pop_Ad_Viewer.class);
-            startActivity(intent);
+//            Intent intent = new Intent(this, Pop_Ad_Viewer.class);
+//            startActivity(intent);
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+            View root = LayoutInflater.from(this).inflate(R.layout.pop_ad_view, null, false);
+            root.findViewById(R.id.btnClose).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    finish();
+                }
+            });
+            WebView webView = (WebView) root.findViewById(R.id.webview);
+            // 홈페이지 지정
+            webView.loadUrl("http://suwonsmartapp.iptime.org/test/lhy/ad.html");
+            // WebViewClient 지정
+            webView.setWebViewClient(new WebViewClient() {
+                public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                    Intent intent = new Intent(Intent.ACTION_VIEW);
+                    intent.setData(Uri.parse(url));
+                    startActivity(intent);
+                    finish();
+                    return true;
+                }
+            });
+            builder.setView(root);
+//            builder.setPositiveButton("확인", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    finish();
+//                }
+//            });
+//            builder.setNegativeButton("취소", null);
+            builder.show();
+            return true;
         }
         return super.onKeyDown(keycode, event);
     }
