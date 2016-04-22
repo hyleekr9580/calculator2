@@ -66,46 +66,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mDecimalFormat = new DecimalFormat("###,###");
 
-        mEditTotal.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mEditMoney.removeTextChangedListener(watcher);
-                    mEditVat.removeTextChangedListener(watcher);
-                } else {
-                    mEditMoney.addTextChangedListener(watcher);
-                    mEditVat.addTextChangedListener(watcher);
+                for (EditText e : mEditTexts) {
+                    if (!e.equals(v)) {
+                        if (hasFocus) {
+                            e.removeTextChangedListener(watcher);
+                        } else {
+                            e.addTextChangedListener(watcher);
+                        }
+                    }
                 }
             }
-        });
-
-        mEditMoney.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mEditTotal.removeTextChangedListener(watcher);
-                    mEditVat.removeTextChangedListener(watcher);
-
-                } else {
-                    mEditTotal.addTextChangedListener(watcher);
-                    mEditVat.addTextChangedListener(watcher);
-                }
-            }
-        });
-
-        mEditVat.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus) {
-                    mEditTotal.removeTextChangedListener(watcher);
-                    mEditMoney.removeTextChangedListener(watcher);
-                } else {
-                    mEditTotal.addTextChangedListener(watcher);
-                    mEditMoney.addTextChangedListener(watcher);
-                }
-            }
-        });
+        };
+        mEditTotal.setOnFocusChangeListener(focusChangeListener);
+        mEditMoney.setOnFocusChangeListener(focusChangeListener);
+        mEditVat.setOnFocusChangeListener(focusChangeListener);
     }
 
 
