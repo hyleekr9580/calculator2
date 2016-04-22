@@ -24,7 +24,8 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, View.OnFocusChangeListener {
     private EditText mEditTotal;
     private EditText mEditMoney;
     private EditText mEditVat;
@@ -40,6 +41,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private List<EditText> mEditTexts;
 
+    private Calculator mCalculator;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -47,6 +50,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //어플종료
 //        activity = MainActivity.this;
+
+        // 부가세 계산기
+        mCalculator = new Calculator();
 
         mEditTotal = (EditText) findViewById(R.id.total_edt);
         mEditMoney = (EditText) findViewById(R.id.money_edt);
@@ -66,23 +72,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         mDecimalFormat = new DecimalFormat("###,###");
 
-        View.OnFocusChangeListener focusChangeListener = new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                for (EditText e : mEditTexts) {
-                    if (!e.equals(v)) {
-                        if (hasFocus) {
-                            e.removeTextChangedListener(watcher);
-                        } else {
-                            e.addTextChangedListener(watcher);
-                        }
-                    }
-                }
-            }
-        };
-        mEditTotal.setOnFocusChangeListener(focusChangeListener);
-        mEditMoney.setOnFocusChangeListener(focusChangeListener);
-        mEditVat.setOnFocusChangeListener(focusChangeListener);
+        mEditTotal.setOnFocusChangeListener(this);
+        mEditMoney.setOnFocusChangeListener(this);
+        mEditVat.setOnFocusChangeListener(this);
     }
 
 
@@ -132,43 +124,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     };
 
     private void calculate(EditText currentEditText) {
-        double num, res, vat, total;
+        double num;
         num = Double.parseDouble(currentEditText.getText().toString().replace(",", ""));
 
         switch (currentEditText.getId()) {
             case R.id.total_edt:
-                //  공급가 계산
-                res = num / 1.10d;
-                //  부가세 계산
-                vat = num - res;
+                mCalculator.setTotal(num);
 
                 //  공급가 보여주기
-                mEditMoney.setText("" + mDecimalFormat.format(res));
+                mEditMoney.setText("" + mDecimalFormat.format(mCalculator.getMoney()));
                 //  부가세 보여주기
-                mEditVat.setText("" + mDecimalFormat.format(vat));
+                mEditVat.setText("" + mDecimalFormat.format(mCalculator.getVat()));
                 break;
             case R.id.money_edt:
-                //  부가세 계산
-                vat = num * 0.10d;
-                //  합계 계산
-                res = num + vat;
+                mCalculator.setMoney(num);
 
                 //  합계 보여주기
-                mEditTotal.setText("" + mDecimalFormat.format(res));
+                mEditTotal.setText("" + mDecimalFormat.format(mCalculator.getTotal()));
                 //  부가세 보여주기
-                mEditVat.setText("" + mDecimalFormat.format(vat));
+                mEditVat.setText("" + mDecimalFormat.format(mCalculator.getVat()));
 
                 break;
             case R.id.vat_edt:
-                //  공급가 계산
-                res = num * 10.0d;
-                //  합계 계산
-                total = num + res;
+                mCalculator.setVat(num);
 
                 //  공급가 보여주기
-                mEditMoney.setText("" + mDecimalFormat.format(res));
+                mEditMoney.setText("" + mDecimalFormat.format(mCalculator.getMoney()));
                 //  합계 보여주기
-                mEditTotal.setText("" + mDecimalFormat.format(total));
+                mEditTotal.setText("" + mDecimalFormat.format(mCalculator.getTotal()));
                 break;
         }
     }
@@ -281,6 +264,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         long value = Long.parseLong(str);
         DecimalFormat format = new DecimalFormat("###,###");
         return format.format(value);
+    }
+
+    @Override
+    public void onFocusChange(View v, boolean hasFocus) {
+        for (EditText e : mEditTexts) {
+            if (!e.equals(v)) {
+                if (hasFocus) {
+                    e.removeTextChangedListener(watcher);
+                } else {
+                    e.addTextChangedListener(watcher);
+                }
+            }
+        }
     }
 }
 
